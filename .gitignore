@@ -1,4 +1,6 @@
 *.tmp
 *.sw?
 node_modules
+*.json
+*.jsonl
 
