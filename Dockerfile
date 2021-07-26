@@ -7,5 +7,5 @@ RUN npm install
 COPY src/ ./src/
 COPY public/ ./public/
 
-CMD node src/main.js
+CMD node -r ts-node/register src/main
 
