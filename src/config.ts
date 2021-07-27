@@ -8,3 +8,14 @@ export const output_dir = process.env.OUTPUT
 export const lastwill_timeout = 5000
 
 
+export function getDatabaseUrl() {
+    if (process.env.DATABASE_URL) {
+        return process.env.DATABASE_URL
+    }
+    const {PGUSER, PGPASSWORD, PGHOST, DBNAME} = process.env;
+    if (PGUSER && PGPASSWORD && PGHOST && DBNAME) {
+        return `postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}:5432/${DBNAME}`
+    }
+    return null;
+}
+

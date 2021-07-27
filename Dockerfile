@@ -1,9 +1,10 @@
-FROM node:14.15.0-alpine3.12 as builder
+FROM node:alpine as builder
 WORKDIR /opt/app
 
 COPY package*.json ./
 RUN npm install
 
+COPY tsconfig.json ./
 COPY src/ ./src/
 COPY public/ ./public/
 
