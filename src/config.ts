@@ -3,8 +3,12 @@ export const port = process.env.PORT || 8080
 export const nodeid = process.env.NODEID || 'NODE-D5C683'
 export const ctrltopic = `switch/${nodeid}/ctrl`
 export const mqtt_host = process.env.MQTT_HOST
+// replay recorded JSONL file
 export const import_file = process.env.IMPORT_FILE
+// output to file/stream
 export const output_dir = process.env.OUTPUT
+// print all messages
+export const verbose = process.env.VERBOSE
 export const lastwill_timeout = 5000
 
 
