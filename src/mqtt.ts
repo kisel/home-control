@@ -3,6 +3,7 @@ const fs = require('fs')
 const path = require('path')
 import {nodeid, ctrltopic, mqtt_host, lastwill_timeout, output_dir} from "./config"
 import {WaterPumpEvent} from './models'
+import {mqtt_output_host, mqtt_output_topic} from './config'
 
 export interface MqttEventHandlers {
     onPowerdown(evt: WaterPumpEvent);
@@ -13,10 +14,30 @@ export interface MqttEventHandlers {
 
 export function start_mqtt_server(eh: MqttEventHandlers) {
     const client  = mqtt.connect(`mqtt://${mqtt_host}:1883/`)
+    let ctx = {
+        mqtt_output_client: null,
+        msg_mirror: (evt: WaterPumpEvent) => {},
+    }
 
-    client.on('connect', function () {
+    if (mqtt_output_host && mqtt_output_topic) {
+        ctx.mqtt_output_client = mqtt.connect(`mqtt://${mqtt_output_host}:1883/`);
+        ctx.mqtt_output_client.on('connect', () => {
+            console.log(`Connected to output mqtt://${mqtt_output_host}:1883/${mqtt_output_topic}`)
+            ctx.mqtt_output_client.publish(
+                `${mqtt_output_topic}/presence`, JSON.stringify({"controlled-node": nodeid})
+            )
+
+            ctx.msg_mirror = (evt) => {
+                ctx.mqtt_output_client.publish(
+                    `${mqtt_output_topic}/msg`, JSON.stringify(evt)
+                )
+            }
+        })
+    }
+
+    client.on('connect', () => {
       console.log(`Connected to mqtt server ${mqtt_host}`)
-      client.subscribe('switch/#', function (err) {
+      client.subscribe('switch/#', (err) => {
         console.log(`Subscribed to switch/# topic`)
         if (!err) {
           client.publish('presence', 'Hello mqtt from robohome')
@@ -43,6 +64,7 @@ export function start_mqtt_server(eh: MqttEventHandlers) {
               rssi: msg[2],
               ch0: msg[3],
           }
+          ctx.msg_mirror(payload)
           eh.onMessage(payload)
           //console.log(`${topic} ${message}`)
           if (evtlog) {

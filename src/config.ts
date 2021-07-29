@@ -10,6 +10,11 @@ export const output_dir = process.env.OUTPUT
 // print all messages
 export const verbose = process.env.VERBOSE
 export const lastwill_timeout = 5000
+// parse dumb device format, convert to JSON, add datetime and extra fields
+// and push back to MQTT for stream recorders such fluentbit-mqtt
+// channel name
+export const mqtt_output_topic = process.env.MQTT_OUTPUT_TOPIC
+export const mqtt_output_host = process.env.MQTT_OUTPUT_HOST
 
 
 export function getDatabaseUrl() {
