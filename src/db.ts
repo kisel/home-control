@@ -18,10 +18,10 @@ const evtStruct = {
     uptime: { type: DataTypes.INTEGER, allowNull: false, },
     rssi: { type: DataTypes.INTEGER, allowNull: false, },
     ch0: { type: DataTypes.STRING, allowNull: false, },
-    record_type: { type: DataTypes.STRING, allowNull: true, },
 }
 
 const evtStructLog = {...evtStruct,
+    record_type: { type: DataTypes.STRING, allowNull: true, },                      
     reason: { type: DataTypes.STRING, allowNull: true, },
     source: { type: DataTypes.STRING, allowNull: true, },
     meta: { type: DataTypes.JSON, allowNull: true, },
