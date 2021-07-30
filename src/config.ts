@@ -28,3 +28,14 @@ export function getDatabaseUrl() {
     return null;
 }
 
+// strip pass, make printable
+export function toPrintableURL(urlstr: string): string {
+    try {
+        let url = new URL(urlstr)
+        url.password=''
+        return url.toString()
+    } catch(e) {
+        return `invalid url: ${e}`
+    }
+}
+

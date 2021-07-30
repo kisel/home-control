@@ -1,5 +1,5 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
-import {getDatabaseUrl} from './config'
+import {getDatabaseUrl, toPrintableURL} from './config'
 
 // table with pump-id, endtime, work duration
 // reflects when pump was powered-down and the last seen state
@@ -28,6 +28,7 @@ const evtStructLog = {...evtStruct,
 }
 
 export async function start_db() {
+    console.log(`Connecting to db ${toPrintableURL(getDatabaseUrl())}`)
     const sequelize = new Sequelize(getDatabaseUrl())
     WaterPumpJournal.init(evtStruct, { sequelize, modelName: 'waterpump_journal' });
     WaterPumpLog.init(evtStructLog, { sequelize, modelName: 'waterpump_log' });
