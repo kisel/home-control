@@ -1,6 +1,6 @@
 import {start_mqtt_server, MqttEventHandlers} from './mqtt'
 import {readEventFile} from './fileimport'
-import {WaterPumpJournal, start_db} from './db'
+import {WaterPumpJournal, WaterPumpLog, start_db} from './db'
 import {start_http_server} from './http'
 import {WaterPumpEvent} from './models'
 import {import_file, mqtt_host, port, getDatabaseUrl, verbose} from './config'
@@ -22,8 +22,8 @@ function write_db_event_to_db(evt: WaterPumpEvent) {
     const eh: MqttEventHandlers = {
         onStateChange: (evt, evtPrev) => {
             console.log(`Pump state changed to `, evt, ` from `, evtPrev)
-            WaterPumpJournal.create({...evtPrev, reason: 'change', source: 'from'})
-            WaterPumpJournal.create({...evt, reason: 'change', source: 'to'})
+            WaterPumpLog.create({...evtPrev, reason: 'change', source: 'from'})
+            WaterPumpLog.create({...evt, reason: 'change', source: 'to'})
         },
 
         onPowerdown: (evt) => {
