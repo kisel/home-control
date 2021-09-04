@@ -13,21 +13,26 @@ function print_event(evt: WaterPumpEvent) {
 }
 
 function write_db_event_to_db(sequelize: Sequelize, evt: WaterPumpEvent) {
- sequelize.transaction(async (t) => {
-     await WaterPumpJournal.destroy({
-         where: {
-             node: evt.node,
-             ts: {
-                 [Op.and]: {
-                     [Op.gte]: new Date(evt.ts.getTime() - (lastwill_timeout / 2)),
-                     [Op.lte]: new Date(evt.ts.getTime() + (lastwill_timeout / 2))
-                 }
-             }
-         },
-         transaction: t
-     })
-     await WaterPumpJournal.create(evt, {transaction: t})
- }).catch(e => { console.log('failed to write to db', e) });
+    let uptime_ms = (+evt.uptime || 0) * 1000
+    if (uptime_ms > 24 * 3600 * 1000 ) {
+        // just in case we ever get corrupted uptime - don't kill the whole log
+        uptime_ms = 0;
+    }
+    sequelize.transaction(async (t) => {
+        await WaterPumpJournal.destroy({
+            where: {
+                node: evt.node,
+                ts: {
+                    [Op.and]: {
+                        [Op.gte]: new Date(evt.ts.getTime() - uptime_ms - (lastwill_timeout / 2)),
+                        [Op.lte]: new Date(evt.ts.getTime() + (lastwill_timeout / 2))
+                    }
+                }
+            },
+            transaction: t
+        })
+        await WaterPumpJournal.create(evt, {transaction: t})
+    }).catch(e => { console.log('failed to write to db', e) });
 }
 
 (async () => {
