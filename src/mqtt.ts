@@ -37,8 +37,9 @@ export function start_mqtt_server(eh: MqttEventHandlers) {
 
     client.on('connect', () => {
       console.log(`Connected to mqtt server ${mqtt_host}`)
-      client.subscribe('switch/#', (err) => {
-        console.log(`Subscribed to switch/# topic`)
+      const topic = `switch/${nodeid}/status`
+      client.subscribe(topic, (err) => {
+        console.log(`Subscribed to ${topic} topic`)
         if (!err) {
           client.publish('presence', 'Hello mqtt from robohome')
         }
