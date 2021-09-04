@@ -1,6 +1,6 @@
 
 export const port = process.env.PORT || 8080
-export const nodeid = process.env.NODEID || 'NODE-D5C683'
+export const nodeid = process.env.NODEID
 export const ctrltopic = `switch/${nodeid}/ctrl`
 export const mqtt_host = process.env.MQTT_HOST
 // replay recorded JSONL file
@@ -17,6 +17,13 @@ export const lastwill_timeout = 5000
 export const mqtt_output_topic = process.env.MQTT_OUTPUT_TOPIC
 export const mqtt_output_host = process.env.MQTT_OUTPUT_HOST
 
+function verifyConfig() {
+    if (!nodeid) {
+        console.log('NODEID env var is not set!')
+        process.exit(1)
+    }
+}
+verifyConfig()
 
 export function getDatabaseUrl() {
     if (process.env.DATABASE_URL) {
