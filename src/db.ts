@@ -1,4 +1,4 @@
-const { Sequelize, Model, DataTypes } = require('sequelize');
+import { Sequelize, Model, DataTypes } from 'sequelize'
 import {getDatabaseUrl, toPrintableURL} from './config'
 
 // table with pump-id, endtime, work duration

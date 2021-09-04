@@ -9,6 +9,7 @@ export const import_file = process.env.IMPORT_FILE
 export const output_dir = process.env.OUTPUT
 // print all messages
 export const verbose = process.env.VERBOSE
+// consider pump down if not seen for 5 seconds
 export const lastwill_timeout = 5000
 // parse dumb device format, convert to JSON, add datetime and extra fields
 // and push back to MQTT for stream recorders such fluentbit-mqtt

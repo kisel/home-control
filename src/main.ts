@@ -1,23 +1,37 @@
 import {start_mqtt_server, MqttEventHandlers} from './mqtt'
 import {readEventFile} from './fileimport'
 import {WaterPumpJournal, WaterPumpLog, start_db} from './db'
+import {Sequelize} from 'sequelize'
 import {start_http_server} from './http'
 import {WaterPumpEvent} from './models'
-import {import_file, mqtt_host, port, getDatabaseUrl, verbose} from './config'
+import {import_file, mqtt_host, port, getDatabaseUrl, verbose, lastwill_timeout} from './config'
 import {theStatus} from './status'
+import { Op } from 'sequelize'
 
 function print_event(evt: WaterPumpEvent) {
   console.log(evt)
 }
 
-function write_db_event_to_db(evt: WaterPumpEvent) {
-  WaterPumpJournal.create(evt).catch(e => {
-      console.log('failed to write to db', e)
-  });
+function write_db_event_to_db(sequelize: Sequelize, evt: WaterPumpEvent) {
+ sequelize.transaction(async (t) => {
+     await WaterPumpJournal.destroy({
+         where: {
+             node: evt.node,
+             ts: {
+                 [Op.and]: {
+                     [Op.gte]: new Date(evt.ts.getTime() - (lastwill_timeout / 2)),
+                     [Op.lte]: new Date(evt.ts.getTime() + (lastwill_timeout / 2))
+                 }
+             }
+         },
+         transaction: t
+     })
+     await WaterPumpJournal.create(evt, {transaction: t})
+ }).catch(e => { console.log('failed to write to db', e) });
 }
 
 (async () => {
-    const db = (getDatabaseUrl()) ? (await start_db()) : null;
+    const sequelize = (getDatabaseUrl()) ? (await start_db()) : null;
 
     const eh: MqttEventHandlers = {
         onStateChange: (evt, evtPrev) => {
@@ -32,9 +46,6 @@ function write_db_event_to_db(evt: WaterPumpEvent) {
             theStatus.lastChangeMsg = evt;
             theStatus.pumpStatus = "off"
             print_event(evt)
-            if (db != null) {
-                write_db_event_to_db(evt)
-            }
         },
 
         onPowerup: (evt) => {
@@ -50,6 +61,9 @@ function write_db_event_to_db(evt: WaterPumpEvent) {
         onMessage: (evt) => {
             if (verbose) {
                 console.log(`received: ${JSON.stringify(evt)}`)
+            }
+            if (sequelize != null) {
+                write_db_event_to_db(sequelize, evt)
             }
         },
     }

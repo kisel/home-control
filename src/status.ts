@@ -1,7 +1,7 @@
 import {WaterPumpEvent} from './models'
 
 export class Status {
-    lastChangeMsg?: WaterPumpEvent;
+    lastChangeMsg?: WaterPumpEvent  = null;
     pumpStatus: null | "on" | "off" = null;
 };
 
