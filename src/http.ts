@@ -34,25 +34,6 @@ export function start_http_server(client: MqttClient, currentStatus: Status) {
       return ({pumpStatus: currentStatus.pumpStatus, lastMsg: currentStatus.lastChangeMsg})
     }))
 
-    // @deprecated
-    app.get('/api/water/status', (req, res) => {
-      res.json({pumpStatus: currentStatus.pumpStatus, lastMsg: currentStatus.lastChangeMsg})
-    })
-
-    // @deprecated
-    app.get('/api/water/reset', (req, res) => {
-      client.publish(ctrltopic, 'ch0=0')
-      console.log('Water reset called')
-      res.send('Water reset called')
-    })
-
-    // @deprecated
-    app.get('/api/water/kill', (req, res) => {
-      client.publish(ctrltopic, 'ch0=1')
-      console.log('Water pump is blocked!')
-      res.send('Water pump is blocked!')
-    })
-
     app.listen(port, () => {
       console.log(`app listening at http://localhost:${port}`)
     })
