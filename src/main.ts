@@ -64,6 +64,7 @@ function write_db_event_to_db(sequelize: Sequelize, evt: WaterPumpEvent) {
         },
 
         onMessage: (evt) => {
+            theStatus.lastStatusMessage = evt;
             if (verbose) {
                 console.log(`received: ${JSON.stringify(evt)}`)
             }

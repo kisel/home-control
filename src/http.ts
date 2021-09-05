@@ -31,7 +31,7 @@ export function start_http_server(client: MqttClient, currentStatus: Status) {
     }))
 
     app.get('/api/status', apiWrapper(async (_req) => {
-      return ({pumpStatus: currentStatus.pumpStatus, lastMsg: currentStatus.lastChangeMsg})
+      return ({pumpStatus: currentStatus.pumpStatus, lastMsg: currentStatus.lastStatusMessage})
     }))
 
     app.listen(port, () => {
