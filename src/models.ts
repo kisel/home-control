@@ -7,3 +7,18 @@ export interface WaterPumpEvent {
     rssi: number
     ch0: string // "1" | "0"
 }
+
+export interface ActionsFile {
+    actions: Action[];
+}
+
+export interface Action {
+    id: string;
+    label: string;
+    commands: ActionCommand[];
+}
+
+export interface ActionCommand {
+    topic: string;
+    payload: string;
+}

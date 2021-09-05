@@ -1,7 +1,7 @@
-const mqtt = require('mqtt')
-const fs = require('fs')
-const path = require('path')
-import {nodeid, ctrltopic, mqtt_host, lastwill_timeout, output_dir} from "./config"
+import * as mqtt from 'mqtt'
+import * as fs from 'fs'
+import * as path from 'path'
+import {nodeid, mqtt_host, lastwill_timeout, output_dir} from "./config"
 import {WaterPumpEvent} from './models'
 import {mqtt_output_host, mqtt_output_topic} from './config'
 
@@ -61,8 +61,8 @@ export function start_mqtt_server(eh: MqttEventHandlers) {
           const payload = {
               ts: new Date(),
               node: ma[1],
-              uptime: msg[1],
-              rssi: msg[2],
+              uptime: parseFloat(msg[1]),
+              rssi: parseFloat(msg[2]) || 0,
               ch0: msg[3],
           }
           ctx.msg_mirror(payload)

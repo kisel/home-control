@@ -4,6 +4,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="icon" href="favicon.svg">
         <title>Water control</title>
+        <script src="/load_buttons.js"></script>
+        <script src="/update_status.js"></script>
     </head>
     <body>
         <div class="container container-sm">
@@ -12,9 +14,11 @@
               <a class="navbar-brand" href="#">Water pump control</a>
           </div>
         </nav>
+            <div class="d-grid gap-2" id="actions">
+            </div>
             <div class="d-grid gap-2">
-            <a class="btn btn-success" href="/api/water/reset">Power ON water pump</a>
-            <a class="btn btn-danger" href="/api/water/kill">STOP water pump</a>
+                <pre id="status">
+                </pre>
             </div>
         </div>
     </body>

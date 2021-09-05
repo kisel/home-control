@@ -3,6 +3,9 @@ export const port = process.env.PORT || 8080
 export const nodeid = process.env.NODEID
 export const ctrltopic = `switch/${nodeid}/ctrl`
 export const mqtt_host = process.env.MQTT_HOST
+
+// mqtt control actions file
+export const actions_file_path = process.env.ACTIONS_FILE
 // replay recorded JSONL file
 export const import_file = process.env.IMPORT_FILE
 // output to file/stream
