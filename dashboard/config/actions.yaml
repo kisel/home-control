@@ -1,0 +1,23 @@
+actions:
+  - id: pump_on
+    label: "Включить насос"
+    commands:
+      - topic: switch/NODE-D6A92F/ctrl
+        # inverse relay
+        payload: ch0=0
+  - id: pump_off
+    label: "Отключить насос"
+    commands:
+      - topic: switch/NODE-D6A92F/ctrl
+        # inverse relay
+        payload: ch0=1
+  - id: watering1_10min
+    label: "Полив зона 1 - 10мин"
+    commands:
+      - topic: switch/NODE-D6A92F/ctrl
+        # inverse relay
+        payload: ch0=1 time=600
+  - id: watering2_10min
+    label: "Полив зона 2 - 10мин"
+  - id: watering_off
+    label: "Отключить полив"
