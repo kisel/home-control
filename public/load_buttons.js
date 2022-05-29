@@ -7,6 +7,9 @@ fetch("/api/actions")
             let btn = document.createElement("a");
             btn.classList.add("btn");
             btn.classList.add("btn-success");
+            if (aDef.color) {
+                btn.style.backgroundColor = aDef.color;
+            }
             btn.onclick = () => {
                 btn.classList.add("disabled");
                 fetch("/api/actions/" + aDef.id, {method: 'POST'})
@@ -19,6 +22,11 @@ fetch("/api/actions")
             }
             btn.text = aDef.label;
             actions.appendChild(btn)
+            if (aDef.add_separator) {
+                let sep = document.createElement("hr");
+                sep.style.margin = '0'
+                actions.appendChild(sep)
+            }
         }
     })
 
