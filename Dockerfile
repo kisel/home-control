@@ -7,6 +7,7 @@ RUN npm install
 COPY tsconfig.json ./
 COPY src/ ./src/
 COPY public/ ./public/
+RUN npm run build
 
-CMD node -r ts-node/register src/main
+CMD node app/main.js
 
